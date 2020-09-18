@@ -59,3 +59,26 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+
+
+#### Install composer.
+* Download Composer
+* Run the setup and Install Composer into the same directory php.exe is located.
+* Enable: extension=php_openssl.dll
+#### Install laravel using this command (laravel framework - 8 )
+> composer global require laravel/installer
+> 
+#### Via Composer Create-Project
+>composer create-project laravel/laravel fitness
+
+#### Now get into fitness folder (path of command prompt).
+> Type php artisan serve
+
+* Now we can start working on project.. 
+
+### Project Name is Fitness_app
+* This project help to make the different round of excersi
+#### Create a controller 
+> php artisan make:controller fitnessController --invokable
