@@ -3,27 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use DB;
 use Illuminate\Support\Facades\Log;
 
 
 class fitnessController extends Controller
 {
-     public function sendResponse($success,$result, $message, $response_code)
-    {
+    public function sendResponse($success,$result, $message, $response_code)
+    				{
         $response = [
             'success' => $success,
             'data'    => $result,
             'message' => $message,
         ];
         return response()->json($response, $response_code);
-    }
+    				}
 
     public function showAll(Request $request)
     {
         Log::info('Display all records: ');
-        $limit = $request->query('limit', 10);
+        $limit = $request->query('limit', 5);
         try {
             $res = DB::select('select count(*) as total from fitnessapp');
             Log::info('Total number of rounds' . $res[0]->total);
@@ -74,7 +73,7 @@ class fitnessController extends Controller
           			
           			DB::beginTransaction();
           			$result = DB::insert('insert into fitnessapp (excercise,seconds,rounds) values (? ,?,?)', [$exe,$sec,$rnd]);
-					log::info('ordered by : ' . $user_id);
+					log::info('inserted : ' . $exe);
                     DB::commit();
                     }
             

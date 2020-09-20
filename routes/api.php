@@ -18,14 +18,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/Fitnessapp', function () {
-    return view('home');
-});
 
-Route::get('/Fitness', 'App\Http\Controllers\fitnessController@showAll');
+Route::get('/fitness', 'App\Http\Controllers\fitnessController@showAll');
 
-Route::get('/Fitness/{id}', 'App\Http\Controllers\fitnessController@showOne');
+Route::get('/fitness/{id}', 'App\Http\Controllers\fitnessController@showOne');
 
-Route::post('/Fitness', 'App\Http\Controllers\fitnessController@create');
+Route::post('/fitness', 'App\Http\Controllers\fitnessController@create');
 
-Route::delete('/Fitness/{id}', 'App\Http\Controllers\fitnessController@delete');
+Route::delete('/fitness/{id}', 'App\Http\Controllers\fitnessController@delete');
