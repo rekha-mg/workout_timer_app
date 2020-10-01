@@ -21,6 +21,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/fitness', 'App\Http\Controllers\fitnessController@showAll');
 
+Route::get('/fitness_id', 'App\Http\Controllers\fitnessController@maxid');
+
 Route::get('/fitness/{id}', 'App\Http\Controllers\fitnessController@showOne');
 
 Route::post('/fitness', 'App\Http\Controllers\fitnessController@create');

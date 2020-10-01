@@ -42,51 +42,25 @@
 			}
 		</style>
 
+		
+
 		<script type="text/javascript">
 			var exe,sec,rnd;
 			var i=1; var str="rmv"; var btn="";
 			function insert_record() {
-				try {
-					$.ajax({  
-						url: '/api/fitness',  
-						type: 'POST',  
-						dataType: 'json',  
-						data: {
-							excercise:exe, 
-							seconds:sec,
-							rounds:rnd 
-						},  
-						success: function (r1) {  
-							console.dir(r1); 
-							//$("#result").html(JSON.stringify(r1));
-							
-							if(r1) {
-								btn = str + i; //rmv1
-								var display_card;
-							   
-								display_card = rnd;
-								display_card +='<div class="card">';
-								display_card +='<div class="card-body">';
-								display_card += '<span >'+exe+ ' </span>';
-								display_card += '<span >'+rnd+ ' </span></div>';
-								display_card += '<button type="button" id="rmv" name='+btn+' class="btn btn-outline-primary 					  btn-sm">Remove</button>';
-								display_card +='</div>';
-								display_card +='</div>';
-								$("#card_data").append(display_card);
-								i++;
-							} 
-							
-						},  
-						error: function (xhr, textStatus, errorThrown) {  
-							console.log('Error in Operation');  
-						}  
-					}); 
-				}
-
-				catch(e){
-					alert("You messed something up!");
-				}
-				
+				btn = str + i; //rmv1
+				var display_card;
+			   
+				display_card = rnd;
+				display_card +='<div class="card">';
+				display_card +='<div class="card-body">';
+				display_card += '<span >'+exe+ ' </span>';
+				display_card += '<span >'+rnd+ ' </span></div>';
+				display_card += '<button type="button" id="rmv" name='+btn+' class="btn btn-outline-primary 					  btn-sm">Remove</button>';
+				display_card +='</div>';
+				display_card +='</div>';
+				$("#card_data").append(display_card);
+				i++;				
 			}
 
 			$(document).ready(function () {

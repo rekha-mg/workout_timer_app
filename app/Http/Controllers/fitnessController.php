@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\Log;
 class fitnessController extends Controller
 {
     public function sendResponse($success,$result, $message, $response_code)
-    				{
+    {
         $response = [
             'success' => $success,
             'data'    => $result,
             'message' => $message,
         ];
         return response()->json($response, $response_code);
-    				}
+    }
 
     public function showAll(Request $request)
     {
@@ -43,6 +43,27 @@ class fitnessController extends Controller
         return $this->sendResponse("true", $record_list, 'request completed', 200);
     }
 
+    public function maxid(Request $request)
+    {
+        Log::info('Display highest id: ');
+        
+        try {
+            $res = DB::select('select max(id) as id from fitnessapp');
+            Log::info('Total number of rounds' . $res[0]->id);
+            $max_id = $res[0]->id;
+            
+        } catch (\PDOException $pex) {
+            Log::critical('some error: ' . print_r($pex->getMessage(), true)); //xampp off
+            return $this->sendResponse("false", "", 'error related to database', 500);
+        } catch (\Exception $e) {
+            Log::critical('some error: ' . print_r($e->getMessage(), true));
+            Log::critical('error line: ' . print_r($e->getLine(), true));
+            return $this->sendResponse("", 'some error in server', 500);
+        }
+        return $this->sendResponse("true", $max_id, 'request completed', 200);
+    }
+
+    
 
     public function showOne(Request $req, $id)
     {
@@ -62,46 +83,57 @@ class fitnessController extends Controller
             return $this->sendResponse("false", "", 'some error in id', 500);
         }
         return $this->sendResponse("true", $list, 'request completed', 200);
-   }
-     public function create(Request $req){
-     	 
-          	if ( $req->has('excercise') && $req->has('seconds') && $req->has('rounds')) {
-            	try {
-                    $exe = $req->input('excercise');
-     	 			$sec = $req->input('seconds');
-     	 			$rnd = $req->input('rounds');
-          			
-          			DB::beginTransaction();
-          			$result = DB::insert('insert into fitnessapp (excercise,seconds,rounds) values (? ,?,?)', [$exe,$sec,$rnd]);
-					log::info('inserted : ' . $exe);
-                    DB::commit();
-                    }
+    }
+
+
+
+    public function create(Request $req){
+
+     if ( $req->has('excercise') && $req->has('seconds') && $req->has('rounds')) {
+           try {
+            $exe = $req->input('excercise');
+            $sec = $req->input('seconds');
+            $rnd = $req->input('rounds');
+
+            $res = DB::select('select max(id) as id from fitnessapp');
+            Log::info('Total number of rounds' . $res[0]->id);
+            $max_id = $res[0]->id;
             
-            	catch (\PDOException $pex) {
+            $data['id'] = $max_id+1;
+
+            DB::beginTransaction();
+            $result = DB::insert('insert into fitnessapp (id,excercise,seconds,rounds) values (?,?,?,?)', [$max_id+1,$exe,$sec,$rnd]);
+            log::info('inserted : ' . $exe);
+            DB::commit();
+            return $this->sendResponse("true", $data, 'Record inserted successfully', 200);
+            }
+
+            catch (\PDOException $pex) {
                 	Log::critical('some error: ' . print_r($pex->getMessage(), true)); //xampp off
                 	DB::rollBack();
                 	return $this->sendResponse("false", "", 'error related to database', 500);
-            	}
-            	catch (\Exception $e) {
-                Log::critical('some error: ' . print_r($e->getMessage(), true));
-                Log::critical('error line: ' . print_r($e->getLine(), true));
-                log::info('during inserting : ' . $exe .$rnd);
-                DB::rollBack();
-           	 	}
-        	} else {
-            DB::rollBack();
-            return $this->sendResponse("false", "", 'some error in input', 500);
-        }
-        return $this->sendResponse("true", $exe, 'Record inserted successfully', 200);
-     	 
-     }
+            }
+            catch (\Exception $e) {
+                    Log::critical('some error: ' . print_r($e->getMessage(), true));
+                    Log::critical('error line: ' . print_r($e->getLine(), true));
+                    log::info('during inserting : ' . $exe .$rnd);
+                    DB::rollBack();
+                    return $this->sendResponse("false", "", 'error related to database', 500);
+                }
+            } else {
 
-     public function delete($id)
-    {
-        if ($id > 0 && $id < 20) {
-            try {
-                $res = DB::delete('delete from fitnessapp where id = ?', [$id]);
-            } catch (\PDOException $pex) {
+                return $this->sendResponse("false", "", 'some error in input', 500);
+            }
+            
+
+        }
+
+        public function delete($id)
+        {
+            if ($id > 0 && $id < 20) {
+                try {
+                    $res = DB::delete('delete from fitnessapp where id = ?', [$id]);
+                } catch (\PDOException $pex) {
                 Log::critical('some error: ' . print_r($pex->getMessage(), true)); //xampp off
                 return $this->sendResponse("false", "", 'error related to database', 500);
             } catch (\Exception $e) {

@@ -19,5 +19,5 @@ Route::get('/', function () {
 
 
 Route::get('/workout_timer', function () {
-    return view('home');
+    return view('workout');
 });
